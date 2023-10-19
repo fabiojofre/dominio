@@ -44,7 +44,7 @@ public class EnviaXML {
 			
 			JSONObject msg = servico.enviaXML(apikey, email, rs.getString("xml"));	
 			Util u = new Util();
-			String mensagem = u.retornaResultadoConsulta(msg);
+			String mensagem = u.trataToken(msg);
 			if(mensagem.equals("Importado com sucesso")) {
 				System.out.println("Nota: "+rs.getInt("id_notasaida")+" "+mensagem);
 				
@@ -95,7 +95,7 @@ public class EnviaXML {
 				
 				JSONObject msg = servico.enviaXML(apikey, email, rs.getString("xml"));	
 				Util u = new Util();
-				String mensagem = u.retornaResultadoConsulta(msg);
+				String mensagem = u.trataToken(msg);
 				if(mensagem.equals("Importado com sucesso")) {
 					System.out.println("Cupom: "+rs.getInt("id_venda")+" "+mensagem);
 					
@@ -147,7 +147,7 @@ public class EnviaXML {
 			
 			JSONObject msg = servico.enviaXML(apikey, email, rs.getString("xml"));	
 			Util u = new Util();
-			String mensagem = u.retornaResultadoConsulta(msg);
+			String mensagem = u.trataToken(msg);
 			if(mensagem.equals("Importado com sucesso")) {
 				System.out.println("Nota de Entrada: "+rs.getInt("numeronota")+" "+mensagem);
 				
