@@ -1,17 +1,45 @@
 package util;
 
-import servico.Autorizacao;
+import java.util.List;
+
+import servico.Arquivo;
+import servico.ServicoConfig;
 
 public class TestaClasse {
-String token = "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6IlJERTBPVEF3UVVVMk16Z3hPRUpGTkVSRk5qUkRNakkzUVVFek1qZEZOVEJCUkRVMlJrTTRSZyJ9.eyJpc3MiOiJodHRwczovL2F1dGgudGhvbXNvbnJldXRlcnMuY29tLyIsInN1YiI6InpEbE1OeDBRR09Vam9XQ0NsV0VDNmRQTVZjeUZkOU1CQGNsaWVudHMiLCJhdWQiOiI0MDlmOTFmNi1kYzE3LTQ0YzgtYTVkOC1lMGExYmFmZDhiNjciLCJpYXQiOjE2OTc3MTY4NzcsImV4cCI6MTY5NzgwMzI3NywiYXpwIjoiekRsTU54MFFHT1Vqb1dDQ2xXRUM2ZFBNVmN5RmQ5TUIiLCJzY29wZSI6Imh0dHBzOi8vYXBpLnRob21zb25yZXV0ZXJzLmNvbS9hdXRoL29udmlvLWJyLmludm9pY2UtaW50ZWdyYXRpb24ud3JpdGUiLCJndHkiOiJjbGllbnQtY3JlZGVudGlhbHMifQ.pjQAvaVp3fmHJg7mz8DkGQSTZsrSphvhBNo66hFCaq5GBnxrVR7e0S0WCb5Jr8H64BU25h_ic2AbTlXFbUnI3kS8WRVF1zJV3IEf0m7KLXMlajz_8LwdisQcUMeleKMx4phkqhrZ0s4It_YBLRoV9kQiTcDobTXTsucnASJ06Vfv5egNL0_HDH0U3aJnaOGp5NrrBbGeE0UpjIW2juVy4aX2Dw_MKU79P5rHz4x4dWyGvAyCzCVvRbt7kRZ3ntCnYRxCN_nA4uIdO3lQzWHGbE-SZLRdCbuhOfpKjO4Lvee5QNuJRKwf3nTU7mKnMSl-mKPi0Rm5SAgSi2mpscb-gQ\r\n"
-		+ "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6IlJERTBPVEF3UVVVMk16Z3hPRUpGTkVSRk5qUkRNakkzUVVFek1qZEZOVEJCUkRVMlJrTTRSZyJ9.eyJpc3MiOiJodHRwczovL2F1dGgudGhvbXNvbnJldXRlcnMuY29tLyIsInN1YiI6InpEbE1OeDBRR09Vam9XQ0NsV0VDNmRQTVZjeUZkOU1CQGNsaWVudHMiLCJhdWQiOiI0MDlmOTFmNi1kYzE3LTQ0YzgtYTVkOC1lMGExYmFmZDhiNjciLCJpYXQiOjE2OTc3MTY4NzcsImV4cCI6MTY5NzgwMzI3NywiYXpwIjoiekRsTU54MFFHT1Vqb1dDQ2xXRUM2ZFBNVmN5RmQ5TUIiLCJzY29wZSI6Imh0dHBzOi8vYXBpLnRob21zb25yZXV0ZXJzLmNvbS9hdXRoL29udmlvLWJyLmludm9pY2UtaW50ZWdyYXRpb24ud3JpdGUiLCJndHkiOiJjbGllbnQtY3JlZGVudGlhbHMifQ.pjQAvaVp3fmHJg7mz8DkGQSTZsrSphvhBNo66hFCaq5GBnxrVR7e0S0WCb5Jr8H64BU25h_ic2AbTlXFbUnI3kS8WRVF1zJV3IEf0m7KLXMlajz_8LwdisQcUMeleKMx4phkqhrZ0s4It_YBLRoV9kQiTcDobTXTsucnASJ06Vfv5egNL0_HDH0U3aJnaOGp5NrrBbGeE0UpjIW2juVy4aX2Dw_MKU79P5rHz4x4dWyGvAyCzCVvRbt7kRZ3ntCnYRxCN_nA4uIdO3lQzWHGbE-SZLRdCbuhOfpKjO4Lvee5QNuJRKwf3nTU7mKnMSl-mKPi0Rm5SAgSi2mpscb-gQ\r\n"
-		+ "" ;
+static String token = "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6IlJERTBPVEF3UVVVMk16Z3hPRUpGTkVSRk5qUkRNakkzUVVFek1qZEZOVEJCUkRVMlJrTTRSZyJ9.eyJpc3MiOiJodHRwczovL2F1dGgudGhvbXNvbnJldXRlcnMuY29tLyIsInN1YiI6InpEbE1OeDBRR09Vam9XQ0NsV0VDNmRQTVZjeUZkOU1CQGNsaWVudHMiLCJhdWQiOiI0MDlmOTFmNi1kYzE3LTQ0YzgtYTVkOC1lMGExYmFmZDhiNjciLCJpYXQiOjE2OTkwMTY4OTcsImV4cCI6MTY5OTEwMzI5NywiYXpwIjoiekRsTU54MFFHT1Vqb1dDQ2xXRUM2ZFBNVmN5RmQ5TUIiLCJzY29wZSI6Imh0dHBzOi8vYXBpLnRob21zb25yZXV0ZXJzLmNvbS9hdXRoL29udmlvLWJyLmludm9pY2UtaW50ZWdyYXRpb24ud3JpdGUiLCJndHkiOiJjbGllbnQtY3JlZGVudGlhbHMifQ.P4OpYCqbexcAGSOFh3lKfE79Vht6VH9fpdSXiII5wb_Ftyqme6ZvPHah3i20bcUcXLpccGfn84JJVQhFokyIEGEmRpVGXfrOQikdfWMIv7gnPoPKJPmBOYOpBxhjAfh7RI3Fx8zXmsLhNm1vrMJVa7no4VDsdJfeZ7zJKkqXVKmI0mQ8ThC4soMsX8cDwH6o-PmpHh-toYw4XZ6X4-OIxoN3fGuVn9IDetnMtQbbQWf_4oruRtJ-Z-V9h6ORR7OwYMi9J0UiORIXjgqpvlUn9WincK7_mmmrVT-Xcn6HrQnN-LFWlzVfDiL6yJejdxJEFkPJR22twVm5lByiC4DHOA";
+static String x_integration_key ="GYBtKWR5QjSwVqtRNHM2igEmyGkr5Elih5QI6jLGeXk";
+static String arquivo = "C:\\temp\\fenix\\nfce\\NFCe26230904887419000168650540001895081054006429.xml";
+static String dirNFCe = "C:\\temp\\fenix\\nfce";
+static String dirNFentrada = "C:\temp\fenix\nfce";
+static String dirNFsaida = "C:\temp\fenix\nfce";
 
 public static void main(String[] args) {
 		// TODO Auto-generated method stub
 
-		Autorizacao aut = new Autorizacao();
-		System.out.println(aut.confirmaDadosCliente());
+//		Autorizacao aut = new Autorizacao();
+//		System.out.println(aut.confirmaDadosCliente(token, x_integration_key));
+//		System.out.println(aut.retornaToken(x_integration_key));
+//		System.out.println(aut.retornaChaveIntegracao(token, x_integration_key));
+//		System.out.println(aut.enviaXML(token, x_integration_key));
+//		System.out.println(aut.enviaXml(token,x_integration_key,arquivo));
+		
+		
+		Arquivo arquivo = new Arquivo();
+		List<String> arquivos = arquivo.listarArquivosXML(dirNFCe);
+//		arquivo.deletarArquivo();
+		int val = 0;
+		for(int i =0; i < arquivos.size(); i++) {
+			System.out.println(arquivos.get(i) );
+			val=val+1;
+		}
+		System.out.println(val);
+		
+		
+		ServicoConfig s = new ServicoConfig();
+		s.trataConfig();
 	}
+
+	
+	
 
 }
