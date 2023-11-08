@@ -56,7 +56,7 @@ public class ServicoConfig {
 		try {
 			cs.abrirConexao(Config.host, Config.porta, Config.base, Config.usuario, Config.senha);
 			System.out.println("Conexao inicial bem sucedida!");
-			String sql = "select token from dominio.token limit 1";
+			String sql = "select token from dominio_api.token limit 1";
 			PreparedStatement stmt = cs.prepareStatement(sql);
 //			stmt.setString(1, Config.token);
 			ResultSet rs = stmt.executeQuery();

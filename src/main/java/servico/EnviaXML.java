@@ -1,5 +1,6 @@
 package servico;
 
+import java.io.File;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
@@ -10,178 +11,149 @@ import org.json.JSONObject;
 import conexao.ConexaoServidor;
 import util.Util;
 import vrrecifeframework.classes.VrProperties;
+
 public class EnviaXML {
-	
-	private String NOTASAIDA = "SELECT id, id_situacaonfe,id_notasaida, xml FROM notasaidanfe WHERE id_situacaonfe = 1 AND (cofre = 0 OR cofre is null) ORDER BY 1 LIMIT 10";
+
+	private String NOTASAIDA = "SELECT id, id_situacaonfe,id_notasaida, xml FROM notasaidanfe WHERE id_situacaonfe = 1 AND (cofre = 0 OR cofre is null) ORDER BY 1 DESC LIMIT 300";
 	private String UPDATE_NOTASAIDA = "update notasaidanfe set cofre = 1 where id = ?";
-	
-	private String NOTAENTRADA = "SELECT id, id_situacaonfe,numeronota, xml FROM notaentradanfe WHERE id_situacaonfe = 1 AND (cofre = 0 OR cofre is null) ORDER BY 1 LIMIT 10";
+
+	private String NOTAENTRADA = "SELECT id, id_situacaonfe,numeronota, xml, chavenfe FROM notaentradanfe WHERE id_situacaonfe = 1 AND (cofre = 0 OR cofre is null) ORDER BY 1 DESC LIMIT 300";
 	private String UPDATE_NOTAENTRADA = "update notaentradanfe set cofre = 1 where id = ?";
-	
-	private String NFCE ="SELECT id, id_situacaonfce,id_venda, xml FROM pdv.vendanfce WHERE id_situacaonfce = 1 AND (cofre = 0 OR cofre is null) ORDER BY 1 LIMIT 10";
+
+	private String NFCE = "SELECT id, id_situacaonfce,id_venda, xml, chavenfce FROM pdv.vendanfce WHERE id_situacaonfce = 1 AND (cofre = 0 OR cofre is null) ORDER BY 1 DESC LIMIT 300";
 	private String UPDATE_NFCE = "update pdv.vendanfce set cofre = 1 where id = ?";
-		
+
 	ConexaoServidor con = new ConexaoServidor();
-	
-		PreparedStatement stmt = null;
-		
-		public static String mensagemSaida="";
-	
-				
-	public void enviaNotaSaida() {
+
+	PreparedStatement stmt = null;
+
+	public static String mensagemSaida = "";
+
+	public void geraNotaSaida() {
 		try {
-			con.abrirConexao(VrProperties.getString("database.ip"), VrProperties.getInt("database.porta"), VrProperties.getString("database.nome"), "postgres", "VrPost@Server");
-			String email = VrProperties.getString("sieg.email");
-			String apikey = VrProperties.getString("sieg.apikey");
-			Servico servico = new Servico();
-			
-			
+			con.abrirConexao(Config.host, Config.porta, Config.base, Config.usuario, Config.senha);
+
 			stmt = con.prepareStatement(NOTASAIDA);
 			PreparedStatement stmt_up = con.prepareStatement(UPDATE_NOTASAIDA);
 			ResultSet rs = stmt.executeQuery();
 			int cont = 0;
-			while(rs.next()){
-			
-			JSONObject msg = servico.enviaXML(apikey, email, rs.getString("xml"));	
-			Util u = new Util();
-			String mensagem = u.trataToken(msg);
-			if(mensagem.equals("Importado com sucesso")) {
-				System.out.println("Nota: "+rs.getInt("id_notasaida")+" "+mensagem);
-				
-				stmt_up.setInt(1, rs.getInt("id"));
-				int rowsInserted = stmt_up.executeUpdate(); 
-				 if (rowsInserted > 0) {
-				     System.out.println("Update executado!");
-				 }else {
-					 System.out.println("Update Falhou!");
-				 }
-				 cont ++;
-			}else {
-				System.out.println("Retorno: "+mensagem);
+			while (rs.next()) {
+				String xml = rs.getString("xml");
+				int inicio = xml.indexOf("infNFe Id=") + 10;
+				int fim = xml.indexOf(" versao=", inicio);
+				String nomeArquivo = Config.diretorio + xml.substring(inicio, fim).replaceAll("\"", "") + ".xml"; // tirar
+																													// as
+																													// aspas
+				Arquivo ar = new Arquivo();
+				ar.geraArquivo(nomeArquivo, xml);
+//					verificar aquivo gerado
+				File arq = new File(nomeArquivo);
+				if (arq.exists()) {
+					System.out.println("Arquivo: " + nomeArquivo + " encontrado na pasta");
+					stmt_up.setInt(1, rs.getInt("id"));
+					int rowsInserted = stmt_up.executeUpdate();
+					if (rowsInserted > 0) {
+						System.out.println("Update executado!");
+					} else {
+						System.out.println("Update Falhou!");
+					}
+					cont++;
+				} else {
+					System.out.println("Retorno: Arquivo não encontrado!");
+				}
+
 			}
-				
-			}
-			if(cont >0) {
-			mensagemSaida = cont+" Notas Fiscais importadas!";
-			System.out.println(mensagemSaida);
-			}
-			
-			
+			con.close();
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-			if(e.toString().contains("not found")) {
-				JOptionPane.showMessageDialog(null, "Verifique se os dados dos parâmetros estão corretos!",  "Erro no retorno do WebService!",JOptionPane.ERROR_MESSAGE );
-				System.out.println(e);
-				System.exit(0);	
-			}else 
-				System.out.println("WebService temporarialente fora!");
+			System.out.println(e);
+
 		}
 	}
-		
-	public void enviaCupom() {
-			try {
-				con.abrirConexao(VrProperties.getString("database.ip"), VrProperties.getInt("database.porta"), VrProperties.getString("database.nome"), "postgres", "VrPost@Server");
-				String email = VrProperties.getString("sieg.email");
-				String apikey = VrProperties.getString("sieg.apikey");
-				Servico servico = new Servico();
-				
-				
-				stmt = con.prepareStatement(NFCE);
-				PreparedStatement stmt_up = con.prepareStatement(UPDATE_NFCE);
-				ResultSet rs = stmt.executeQuery();
-				int cont = 0;
-				while(rs.next()){
-				
-				JSONObject msg = servico.enviaXML(apikey, email, rs.getString("xml"));	
-				Util u = new Util();
-				String mensagem = u.trataToken(msg);
-				if(mensagem.equals("Importado com sucesso")) {
-					System.out.println("Cupom: "+rs.getInt("id_venda")+" "+mensagem);
-					
-					stmt_up.setInt(1, rs.getInt("id"));
-					int rowsInserted = stmt_up.executeUpdate(); 
-					 if (rowsInserted > 0) {
-					     System.out.println("Update executado!");
-					 }else {
-						 System.out.println("Update Falhou!");
-					 }
-					 cont ++;
-				}else {
-					System.out.println("Retorno: "+mensagem);
-				}
-					
-				}
-				if(cont >0) {
-				mensagemSaida = cont+" Cupons Fiscais importadas!";
-				System.out.println(mensagemSaida);
-				}
-				
-				
-			} catch (Exception e)  {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-				if(e.toString().contains("not found")) {
-					JOptionPane.showMessageDialog(null, "Verifique se os dados dos parâmetros estão corretos!",  "Erro no retorno do WebService!",JOptionPane.ERROR_MESSAGE );
-					System.out.println(e);
-					System.exit(0);	
-				}else 
-					System.out.println("WebService temporarialente fora!");
-			}
-		
-	}
-	
-	public void enviaNotaEntrada() {
+
+	public void geraCupom() {
 		try {
-			con.abrirConexao(VrProperties.getString("database.ip"), VrProperties.getInt("database.porta"), VrProperties.getString("database.nome"), "postgres", "VrPost@Server");
-			String email = VrProperties.getString("sieg.email");
-			String apikey = VrProperties.getString("sieg.apikey");
-			Servico servico = new Servico();
-			
-			
+			con.abrirConexao(Config.host, Config.porta, Config.base, Config.usuario, Config.senha);
+
+			stmt = con.prepareStatement(NFCE);
+			PreparedStatement stmt_up = con.prepareStatement(UPDATE_NFCE);
+			ResultSet rs = stmt.executeQuery();
+			int cont = 0;
+			while (rs.next()) {
+
+				String xml = rs.getString("xml");
+				String nomeArquivo = Config.diretorio + "NFCe" + rs.getString("chavenfce") + ".xml";
+
+				Arquivo ar = new Arquivo();
+				ar.geraArquivo(nomeArquivo, xml);
+//				verificar aquivo gerado
+				File arq = new File(nomeArquivo);
+				if (arq.exists()) {
+					System.out.println("Arquivo: " + nomeArquivo + " encontrado na pasta");
+					stmt_up.setInt(1, rs.getInt("id"));
+					int rowsInserted = stmt_up.executeUpdate();
+					if (rowsInserted > 0) {
+						System.out.println("Update executado!");
+					} else {
+						System.out.println("Update Falhou!");
+					}
+					cont++;
+				} else {
+					System.out.println("Retorno: Arquivo não encontrado!");
+				}
+
+			}
+			con.close();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			System.out.println(e);
+		}
+
+	}
+
+	public void geraNotaEntrada() {
+		try {
+
+			con.abrirConexao(Config.host, Config.porta, Config.base, Config.usuario, Config.senha);
+
 			stmt = con.prepareStatement(NOTAENTRADA);
 			PreparedStatement stmt_up = con.prepareStatement(UPDATE_NOTAENTRADA);
 			ResultSet rs = stmt.executeQuery();
 			int cont = 0;
-			while(rs.next()){
-			
-			JSONObject msg = servico.enviaXML(apikey, email, rs.getString("xml"));	
-			Util u = new Util();
-			String mensagem = u.trataToken(msg);
-			if(mensagem.equals("Importado com sucesso")) {
-				System.out.println("Nota de Entrada: "+rs.getInt("numeronota")+" "+mensagem);
-				
-				stmt_up.setInt(1, rs.getInt("id"));
-				int rowsInserted = stmt_up.executeUpdate(); 
-				 if (rowsInserted > 0) {
-				     System.out.println("Update executado!");
-				 }else {
-					 System.out.println("Update Falhou!");
-				 }
-				 cont ++;
-			}else {
-				System.out.println("Retorno: "+mensagem);
+			while (rs.next()) {
+
+				String xml = rs.getString("xml");
+				String nomeArquivo = Config.diretorio + "NFe" + rs.getString("chavenfe") + ".xml";
+
+				Arquivo ar = new Arquivo();
+				ar.geraArquivo(nomeArquivo, xml);
+//				verificar aquivo gerado
+				File arq = new File(nomeArquivo);
+				if (arq.exists()) {
+					System.out.println("Arquivo: " + nomeArquivo + " encontrado na pasta");
+					stmt_up.setInt(1, rs.getInt("id"));
+					int rowsInserted = stmt_up.executeUpdate();
+					if (rowsInserted > 0) {
+						System.out.println("Update executado!");
+					} else {
+						System.out.println("Update Falhou!");
+					}
+					cont++;
+				} else {
+					System.out.println("Retorno: Arquivo não encontrado!");
+				}
+
 			}
-				
-			}
-			if(cont >0) {
-			mensagemSaida = cont+" Notas Fiscais importadas!";
-			System.out.println(mensagemSaida);
-			}
-			
-			
+			con.close();
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-			if(e.toString().contains("not found")) {
-				JOptionPane.showMessageDialog(null, "Verifique se os dados dos parâmetros estão corretos!",  "Erro no retorno do WebService!",JOptionPane.ERROR_MESSAGE );
-				System.out.println(e);
-				System.exit(0);	
-			}else 
-				System.out.println("WebService temporarialente fora!");
+			System.out.println(e);
 		}
+		
+
 	}
-	
-	
 
 }

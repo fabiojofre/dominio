@@ -1,6 +1,9 @@
 package servico;
 
 import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,5 +28,22 @@ public class Arquivo {
 		System.out.println(file.delete());
 	}
 	
-
+	public void geraArquivo(String arquivo, String xml) {
+		File file = new File(arquivo);
+		try {
+			file.createNewFile();
+			 FileWriter fileWriter = new FileWriter(arquivo, false);
+	         PrintWriter printWriter = new PrintWriter(fileWriter);
+	         printWriter.print(xml);
+	         printWriter.flush();
+	            printWriter.close();
+			System.out.println("XML "+arquivo+" gerado com sucesso");
+			
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			System.out.println("Erro na geracao do arquivo "+arquivo);
+			e.printStackTrace();
+		}
+		
+	}
 }

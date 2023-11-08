@@ -2,6 +2,7 @@ package servico;
 
 import java.io.File;
 import java.io.IOException;
+import java.sql.PreparedStatement;
 
 import org.json.JSONObject;
 
@@ -9,6 +10,7 @@ import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
 
+import conexao.ConexaoServidor;
 import okhttp3.Call;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
@@ -48,6 +50,23 @@ public class Autorizacao {
 					response.body().close();
 					client.connectionPool().evictAll(); //limpa a piscina de conexao
 				} catch (IOException e) {
+					e.printStackTrace();
+				}
+				ConexaoServidor con = new ConexaoServidor();
+				String UPDATE_TOKEN = "update dominio_api.token set token = ?";
+				try {
+					con.abrirConexao(Config.host, Config.porta, Config.base, Config.usuario, Config.senha);
+					PreparedStatement stmt_up = con.prepareStatement(UPDATE_TOKEN);
+					stmt_up.setString(1,token);
+					int rowsInserted = stmt_up.executeUpdate();
+					if (rowsInserted > 0) {
+						System.out.println("Update token executado!");
+					} else {
+						System.out.println("Update token falhou!");
+					}
+					con.close();
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 				

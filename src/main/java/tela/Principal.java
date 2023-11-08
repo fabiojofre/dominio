@@ -201,9 +201,9 @@ public class Principal extends JFrame {
 		public void run() {
 			if (atividade == true) {
 				lbStatus_1.setText("Executando!!!!!");
-				 	envia.enviaNotaSaida();
-					envia.enviaNotaEntrada();
-					envia.enviaCupom();
+				 	envia.geraNotaSaida();
+					envia.geraNotaEntrada();
+					envia.geraCupom();
 				System.out.println("Time's up!");
 				lbStatus_1.setText("");
 			} else
