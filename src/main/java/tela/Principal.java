@@ -10,6 +10,9 @@ import java.awt.Toolkit;
 import java.awt.TrayIcon;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -22,12 +25,17 @@ import javax.swing.SwingConstants;
 import javax.swing.WindowConstants;
 import javax.swing.border.EmptyBorder;
 
+import servico.Arquivo;
+import servico.Autorizacao;
+import servico.Config;
 import servico.EnviaXML;
-import vrrecifeframework.classes.VrProperties;
+import servico.ServicoConfig;
+import util.Autenticacao;
 
 
 public class Principal extends JFrame {
 	private static final long serialVersionUID = 1L;
+	
 	EnviaXML envia = new EnviaXML();
 
 	private JPanel contentPane;
@@ -45,6 +53,9 @@ public class Principal extends JFrame {
 					Principal frame = new Principal();
 					frame.setLocationRelativeTo(null);
 					frame.setVisible(true);
+					ServicoConfig serv = new ServicoConfig();
+					serv.trataConfig();
+					
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -61,7 +72,7 @@ public class Principal extends JFrame {
 	Timer timer;
 	boolean atividade = false;
 	// variavel properties
-	VrProperties vr = new VrProperties();
+//	ServicoConfig serv = new ServicoConfig();
 	int minutos;
 	private final JLabel lbStatus_1 = new JLabel("");
 
@@ -74,7 +85,7 @@ public class Principal extends JFrame {
 		minutos = 15;
 		setResizable(false);
 		setAutoRequestFocus(false);
-		setTitle("Sieg - Cofre");
+		setTitle("Dominio APP");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
 		setBounds(100, 100, 402, 165);
@@ -204,7 +215,29 @@ public class Principal extends JFrame {
 				 	envia.geraNotaSaida();
 					envia.geraNotaEntrada();
 					envia.geraCupom();
-				System.out.println("Time's up!");
+					Arquivo arquivo = new Arquivo();
+					Autorizacao aut = new Autorizacao();
+					List<String> arquivos = new ArrayList<>();
+					arquivos = arquivo.listarArquivosXML(Config.diretorio);
+					System.out.println("Listando arquivos...");
+					for(int i=0;i < arquivos.size();i++) {
+						System.out.println("Arquivo: "+arquivos.get(i));
+						// envia xml e recebe o retorno
+						int ret = aut.enviaXml(Config.token,Config.x_integration_key,arquivos.get(i));
+						
+						if(ret == 1) {
+							System.out.println(aut.getIdEnvio());//futuramente será usado para validação de dados do xml enviado
+								File f = new File(arquivos.get(i));
+								if(f.delete()) {
+									System.out.println("deletado!!!");
+								}
+//												
+						} if(ret == 2) {
+							Config.token = aut.retornaToken(Config.x_integration_key, Config.client_id, Config.client_secret, Config.audience);
+						}
+					}
+			
+				System.out.println("Ciclo finalizado!");
 				lbStatus_1.setText("");
 			} else
 

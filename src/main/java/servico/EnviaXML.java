@@ -14,7 +14,7 @@ import vrrecifeframework.classes.VrProperties;
 
 public class EnviaXML {
 
-	private String NOTASAIDA = "SELECT id, id_situacaonfe,id_notasaida, xml FROM notasaidanfe WHERE id_situacaonfe = 1 AND (cofre = 0 OR cofre is null) ORDER BY 1 DESC LIMIT 300";
+	private String NOTASAIDA = "SELECT nsd.id,nsd.id_situacaonfe,nsd.id_notasaida, nsd.xml,chavenfe FROM notasaidanfe nsd join notasaida ns on ns.id = nsd.id_notasaida WHERE nsd.id_situacaonfe = 1 AND (nsd.cofre = 0 OR nsd.cofre is null) ORDER BY 1 DESC LIMIT 300";
 	private String UPDATE_NOTASAIDA = "update notasaidanfe set cofre = 1 where id = ?";
 
 	private String NOTAENTRADA = "SELECT id, id_situacaonfe,numeronota, xml, chavenfe FROM notaentradanfe WHERE id_situacaonfe = 1 AND (cofre = 0 OR cofre is null) ORDER BY 1 DESC LIMIT 300";
@@ -39,9 +39,9 @@ public class EnviaXML {
 			int cont = 0;
 			while (rs.next()) {
 				String xml = rs.getString("xml");
-				int inicio = xml.indexOf("infNFe Id=") + 10;
-				int fim = xml.indexOf(" versao=", inicio);
-				String nomeArquivo = Config.diretorio + xml.substring(inicio, fim).replaceAll("\"", "") + ".xml"; // tirar
+//				int inicio = xml.indexOf("infNFe Id=") + 10;
+//				int fim = xml.indexOf(" versao=", inicio);
+				String nomeArquivo = Config.diretorio + "NFe" + rs.getString("chavenfe") + ".xml";	 // tirar
 																													// as
 																													// aspas
 				Arquivo ar = new Arquivo();

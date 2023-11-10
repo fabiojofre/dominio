@@ -4,6 +4,9 @@ import java.io.File;
 import java.io.IOException;
 import java.sql.PreparedStatement;
 
+import javax.swing.JOptionPane;
+
+import org.apache.poi.util.SystemOutLogger;
 import org.json.JSONObject;
 
 import com.mashape.unirest.http.HttpResponse;
@@ -23,6 +26,9 @@ import util.Util;
 
 
 public class Autorizacao {
+	
+	private String idEnvio;
+	
 	
 	public String retornaToken(String x_integration_key, String client_id, String client_secret, String audience) {
 	String token ="";
@@ -126,7 +132,7 @@ public class Autorizacao {
 	}
 	
 	
-	public String enviaXml(String token, String x_integration_key, String arquivo) {
+	public int enviaXml(String token, String x_integration_key, String arquivo) {
 		String retorno = "";
 		OkHttpClient client = new OkHttpClient().newBuilder()
 				  .build();
@@ -156,8 +162,41 @@ public class Autorizacao {
 				} catch (IOException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
+					System.out.println("Erro na conexão com o servidor! \n"+e);
+					retorno = "Erro na conexão com o servidor! \nVerifique sua internet ou entre em contato com a Dominio!\n"+e.getMessage();
 				}
-				return retorno;
+				return trataMensagemRetorno(retorno);
 	}
+	
+	private int trataMensagemRetorno(String mensagem) {
+		int ret =0;
+		if(mensagem.contains("Aguardando processamento")) {
+			ret=1;
+			int inicio = mensagem.indexOf("id") + 5;
+			int fim = mensagem.indexOf("status", inicio);
+			String msg = mensagem.substring(inicio, fim-3);
+			setIdEnvio(msg); 
+			System.out.println("Aguardando processamento");
+		}else if(mensagem.contains("Failed to decode invalid or incorrectly formatted token")){
+			ret = 2;
+			System.out.println("Failed to decode invalid or incorrectly formatted token");
+		}else if(mensagem.contains("Client Not Enabled")) {
+			ret = 3;
+			JOptionPane.showMessageDialog(null, "Cliente não cadastrado corretamente ou não habilitado! Favor revisar os parâmetros!");
+		}else 
+		System.out.println(mensagem);
+		return ret;
+	}
+
+
+	public String getIdEnvio() {
+		return idEnvio;
+	}
+
+
+	private void setIdEnvio(String idEnvio) {
+		this.idEnvio = idEnvio;
+	}
+
 	
 }

@@ -25,7 +25,7 @@ public class Arquivo {
 	
 	public void deletarArquivo(String arquivo) {
 		File file = new File(arquivo);
-		System.out.println(file.delete());
+		System.out.println("Arquivo "+arquivo+" excluído com sucesso!");
 	}
 	
 	public void geraArquivo(String arquivo, String xml) {
