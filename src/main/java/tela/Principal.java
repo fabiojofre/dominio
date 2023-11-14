@@ -86,7 +86,7 @@ public class Principal extends JFrame {
 		minutos = 15;
 		setResizable(false);
 		setAutoRequestFocus(false);
-		setTitle("Dominio APP");
+		setTitle("Dominio APP - ");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
 		setBounds(100, 100, 402, 165);
@@ -236,12 +236,14 @@ public class Principal extends JFrame {
 						
 						if(ret == 1) {
 							System.out.println(aut.getIdEnvio());//futuramente será usado para validação de dados do xml enviado
-//							String codigo = aut.confirmaProcessamento(Config.token,Config.x_integration_key, aut.getIdEnvio());
-//							if(codigo.equals("SA2")) {
-//								System.out.println("Codigo :"+codigo+" Processado!");
-//							}else {
-//								
-//							}
+							String codigo = aut.confirmaProcessamento(Config.token,Config.x_integration_key, aut.getIdEnvio());
+							if(codigo.equals("SA2")) {
+								System.out.println("Codigo :"+codigo+" Processado!");
+							}else {
+								arquivo.escreverLog("Arquivo: "+arquivos.get(i)+" - "+Config.msgLog);
+								System.out.println(Config.msgLog);
+								Config.msgLog = "";
+							}
 								File f = new File(arquivos.get(i));
 								if(f.delete()) {
 									System.out.println("deletado!!!");

@@ -18,6 +18,9 @@ public class Config {
 	public static String nomeLoja ="";
 	public static Long cnpj;
 	
+	
+	public static String msgLog = "";
+	
 			
 	
 	

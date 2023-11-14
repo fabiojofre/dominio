@@ -169,31 +169,28 @@ public class Autorizacao {
 	}
 	
 	public String confirmaProcessamento(String token, String x_integration_key, String processamento ) {
-		String retorno = "";
-		OkHttpClient client = new OkHttpClient().newBuilder()
-				  .build();
-				MediaType mediaType = MediaType.parse("text/plain");
-				RequestBody body = RequestBody.create(mediaType, "");
-				Request request = new Request.Builder()
-				  .url("https://api.onvio.com.br/dominio/invoice/v3/batches/"+processamento)
-				  .method("GET", body)
-				  .addHeader("x-integration-key", x_integration_key)
-				  .addHeader("Authorization", "Bearer "+token)
-				  .build();
+		String retorno = ""; 
+		OkHttpClient client = new OkHttpClient();
+		Request request = new Request.Builder()
+				.url("https://api.onvio.com.br/dominio/invoice/v3/batches/"+processamento)
+				.addHeader("x-integration-key", x_integration_key)
+				.addHeader("Authorization", "Bearer "+token)
+				.build();
+
+		  	Response response;
+			try {
+				response = client.newCall(request).execute();
+				retorno = response.body().string();
 				
-				try {
-					Response response = client.newCall(request).execute();
-					retorno = response.body().source().readUtf8().toString();
-					
-					//limpa a piscina de conexao
-					Call call = client.newCall(request);
-					response.body().close();
-					client.connectionPool().evictAll(); 
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-				return trataMensagemConfirmacao(retorno);
+				//limpa a piscina de conexao
+				Call call = client.newCall(request);
+				response.body().close();
+				client.connectionPool().evictAll(); 
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			return trataMensagemConfirmacao(retorno);
 		
 	}
 	private int trataMensagemRetorno(String mensagem) {
@@ -217,13 +214,13 @@ public class Autorizacao {
 	}
 
 	private String trataMensagemConfirmacao(String mensagem) {
-			int inicioCod = mensagem.indexOf("\"code\": \"") + 9;
+			int inicioCod = mensagem.indexOf("\"apiStatus\":{\"code\":") + 21;
 			int fimCod = mensagem.indexOf("\",", inicioCod);
 			String msgRet = mensagem.substring(inicioCod, fimCod);
 			setIdEnvio(msgRet); 
-			int inicioMsg = mensagem.indexOf("\"code\": \"") + 9;
-			int fimMsg = mensagem.indexOf("\",", inicioMsg);
-			System.out.println(mensagem.substring(inicioMsg, fimMsg));
+			
+//			System.out.println(mensagem);
+			Config.msgLog = mensagem;
 			return msgRet;
 		
 	}
