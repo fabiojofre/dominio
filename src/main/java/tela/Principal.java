@@ -11,6 +11,7 @@ import java.awt.TrayIcon;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Timer;
@@ -212,13 +213,21 @@ public class Principal extends JFrame {
 		public void run() {
 			if (atividade == true) {
 				lbStatus_1.setText("Executando!!!!!");
+				
 				 	envia.geraNotaSaida();
 					envia.geraNotaEntrada();
 					envia.geraCupom();
+					
 					Arquivo arquivo = new Arquivo();
 					Autorizacao aut = new Autorizacao();
+					// cria aqruivo de log
+				
+					
+					
+					
 					List<String> arquivos = new ArrayList<>();
 					arquivos = arquivo.listarArquivosXML(Config.diretorio);
+					
 					System.out.println("Listando arquivos...");
 					for(int i=0;i < arquivos.size();i++) {
 						System.out.println("Arquivo: "+arquivos.get(i));
@@ -227,6 +236,12 @@ public class Principal extends JFrame {
 						
 						if(ret == 1) {
 							System.out.println(aut.getIdEnvio());//futuramente será usado para validação de dados do xml enviado
+//							String codigo = aut.confirmaProcessamento(Config.token,Config.x_integration_key, aut.getIdEnvio());
+//							if(codigo.equals("SA2")) {
+//								System.out.println("Codigo :"+codigo+" Processado!");
+//							}else {
+//								
+//							}
 								File f = new File(arquivos.get(i));
 								if(f.delete()) {
 									System.out.println("deletado!!!");

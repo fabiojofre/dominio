@@ -39,11 +39,28 @@ public class Arquivo {
 	            printWriter.close();
 			System.out.println("XML "+arquivo+" gerado com sucesso");
 			
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			System.out.println("Erro na geracao do arquivo "+arquivo);
-			e.printStackTrace();
-		}
+		}  catch (IOException e) {
+            e.printStackTrace();
+        }
 		
 	}
+	 public void escreverLog(String linha) {
+			File file = new File("../log.txt");
+			try {
+			if (!file.exists()) {
+				 file.createNewFile();
+				System.out.print("Arquivo de log criado!");
+			}
+			FileWriter fileWriter = new FileWriter(file, true);
+			PrintWriter printWriter = new PrintWriter(fileWriter);
+			printWriter.println(linha);
+			printWriter.flush();
+			printWriter.close();
+			
+			} catch (IOException e) {
+			    e.printStackTrace(); 
+			} 
+			
+			
+	 }
 }

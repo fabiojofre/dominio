@@ -17,13 +17,14 @@ public class ServicoConfig {
 		Config.porta = VrProperties.getInt("database.porta");
 		Config.usuario = VrProperties.getString("database.usuario");
 		Config.senha = VrProperties.getString("database.senha");
-		
+		Config.loja = VrProperties.getInt("config.loja");
 
 		Config.x_integration_key = VrProperties.getString("config.chave");
 		Config.client_id = VrProperties.getString("config.client_id");
 		Config.client_secret = VrProperties.getString("config.client_secret");
 		Config.audience = VrProperties.getString("config.audience");
-		Config.diretorio = VrProperties.getString("config.diretorio");
+//		Config.diretorio = VrProperties.getString("config.diretorio");
+		
 		
 
 		String dadosProp ="";
@@ -44,6 +45,10 @@ public class ServicoConfig {
 			dadosProp = dadosProp+"\n config.audience";
 			cont=cont+1;
 		}
+		if(Config.loja == null) {
+			dadosProp = dadosProp+"\n config.loja";
+			cont=cont+1;
+		}
 		if(cont >0) {
 			JOptionPane.showMessageDialog(null, "Verifique se os dados abaixo estao inseridos corretamnte no config.properties.\n"+dadosProp+"","Erro de configuracao!",JOptionPane.ERROR_MESSAGE);
 		}
@@ -58,12 +63,20 @@ public class ServicoConfig {
 			System.out.println("Conexao inicial bem sucedida!");
 			String sql = "select token from dominio_api.token limit 1";
 			PreparedStatement stmt = cs.prepareStatement(sql);
-//			stmt.setString(1, Config.token);
 			ResultSet rs = stmt.executeQuery();
-
-			
 			while (rs.next()) {
 				Config.token = rs.getString(1);
+			}
+			
+
+			String sql2 = "select l.id, f.nomefantasia, cnpj from loja l join fornecedor f on l.id_fornecedor = f.id where l.id = ?";
+			PreparedStatement stmt2 = cs.prepareStatement(sql2);
+			stmt2.setInt(1, Config.loja);
+			ResultSet rs2 = stmt2.executeQuery();
+			while (rs2.next()) {
+				Config.loja = rs2.getInt(1);
+				Config.nomeLoja = rs2.getString(2);
+				Config.cnpj = rs2.getLong(3);
 			}
 			cs.close();
 		} catch (Exception e) {
@@ -87,5 +100,8 @@ public class ServicoConfig {
 		System.out.println("Audience: " + Config.audience);
 		System.out.println("Token Temporário: "+Config.token);
 		System.out.println("Pasta de XMLs: "+Config.diretorio);
+		System.out.println("Id da Loja: "+Config.loja);
+		System.out.println("Nome Loja: "+Config.nomeLoja);
+		System.out.println("CNPJ: "+Config.cnpj);
 	}
 }

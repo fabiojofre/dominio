@@ -168,6 +168,34 @@ public class Autorizacao {
 				return trataMensagemRetorno(retorno);
 	}
 	
+	public String confirmaProcessamento(String token, String x_integration_key, String processamento ) {
+		String retorno = "";
+		OkHttpClient client = new OkHttpClient().newBuilder()
+				  .build();
+				MediaType mediaType = MediaType.parse("text/plain");
+				RequestBody body = RequestBody.create(mediaType, "");
+				Request request = new Request.Builder()
+				  .url("https://api.onvio.com.br/dominio/invoice/v3/batches/"+processamento)
+				  .method("GET", body)
+				  .addHeader("x-integration-key", x_integration_key)
+				  .addHeader("Authorization", "Bearer "+token)
+				  .build();
+				
+				try {
+					Response response = client.newCall(request).execute();
+					retorno = response.body().source().readUtf8().toString();
+					
+					//limpa a piscina de conexao
+					Call call = client.newCall(request);
+					response.body().close();
+					client.connectionPool().evictAll(); 
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				return trataMensagemConfirmacao(retorno);
+		
+	}
 	private int trataMensagemRetorno(String mensagem) {
 		int ret =0;
 		if(mensagem.contains("Aguardando processamento")) {
@@ -177,7 +205,7 @@ public class Autorizacao {
 			String msg = mensagem.substring(inicio, fim-3);
 			setIdEnvio(msg); 
 			System.out.println("Aguardando processamento");
-		}else if(mensagem.contains("Failed to decode invalid or incorrectly formatted token")){
+		}else if(mensagem.contains("Failed to decode invalid or incorrectly formatted token") || (mensagem.contains("Token has expired"))){
 			ret = 2;
 			System.out.println("Failed to decode invalid or incorrectly formatted token");
 		}else if(mensagem.contains("Client Not Enabled")) {
@@ -188,6 +216,17 @@ public class Autorizacao {
 		return ret;
 	}
 
+	private String trataMensagemConfirmacao(String mensagem) {
+			int inicioCod = mensagem.indexOf("\"code\": \"") + 9;
+			int fimCod = mensagem.indexOf("\",", inicioCod);
+			String msgRet = mensagem.substring(inicioCod, fimCod);
+			setIdEnvio(msgRet); 
+			int inicioMsg = mensagem.indexOf("\"code\": \"") + 9;
+			int fimMsg = mensagem.indexOf("\",", inicioMsg);
+			System.out.println(mensagem.substring(inicioMsg, fimMsg));
+			return msgRet;
+		
+	}
 
 	public String getIdEnvio() {
 		return idEnvio;
