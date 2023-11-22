@@ -23,7 +23,6 @@ public class ServicoConfig {
 		Config.client_id = VrProperties.getString("config.client_id");
 		Config.client_secret = VrProperties.getString("config.client_secret");
 		Config.audience = VrProperties.getString("config.audience");
-//		Config.diretorio = VrProperties.getString("config.diretorio");
 		
 		
 
@@ -61,8 +60,9 @@ public class ServicoConfig {
 		try {
 			cs.abrirConexao(Config.host, Config.porta, Config.base, Config.usuario, Config.senha);
 			System.out.println("Conexao inicial bem sucedida!");
-			String sql = "select token from dominio_api.token limit 1";
+			String sql = "select token from dominio_api.token where id_loja = ? limit 1";
 			PreparedStatement stmt = cs.prepareStatement(sql);
+			stmt.setInt(1, Config.loja);
 			ResultSet rs = stmt.executeQuery();
 			while (rs.next()) {
 				Config.token = rs.getString(1);

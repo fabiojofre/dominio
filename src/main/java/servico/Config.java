@@ -13,7 +13,7 @@ public class Config {
 	public static String client_secret;
 	public static String audience;
 	public static String token ="";
-	public static String diretorio="../xml/";
+	public static String diretorio="xml/";
 	public static Integer loja = 0;
 	public static String nomeLoja ="";
 	public static Long cnpj;

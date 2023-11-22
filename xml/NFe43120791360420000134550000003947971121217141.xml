@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?><nfeProc xmlns="http://www.portalfiscal.inf.br/nfe" versao="2.00"><NFe xmlns="http://www.portalfiscal.inf.br/nfe"><infNFe Id="NFe43120791360420000134550000003947971121217141" versao="2.00"><ide><cUF>43</cUF><cNF>12121714</cNF><natOp>VENDA</natOp><indPag>1</indPag><mod>55</mod><serie>0</serie><nNF>394797</nNF><dEmi>2012-07-30</dEmi><dSaiEnt>2012-07-30</dSaiEnt><hSaiEnt>10:52:00</hSaiEnt><tpNF>1</tpNF><cMunFG>4309555</cMunFG><tpImp>1</tpImp><tpEmis>1</tpEmis><cDV>1</cDV><tpAmb>1</tpAmb><finNFe>1</finNFe><procEmi>0</procEmi><verProc>3.0.5.14</verProc></ide><emit><CNPJ>91360420000134</CNPJ><xNome>COOP SUINOCULTORES DO CAI SUPERIOR LTDA</xNome><xFant>OURO DO SUL MAT</xFant><enderEmit><xLgr>RUA 25 DE JULHO 112</xLgr><nro>.</nro><xBairro>CENTRO</xBairro><cMun>4309555</cMun><xMun>HARMONIA</xMun><UF>RS</UF><CEP>95785000</CEP><cPais>1058</cPais><xPais>BRASIL</xPais><fone>5136951155</fone></enderEmit><IE>2780000079</IE><CRT>3</CRT></emit><dest><CNPJ>08865810000112</CNPJ><xNome>109177-8 VERA M DA SILVA REINHEIMER E CIA LTDA</xNome><enderDest><xLgr>RUA EUGENIO BERGER, 470</xLgr><nro>.</nro><xBairro>ITAPEMA</xBairro><cMun>4318705</cMun><xMun>SAO LEOPOLDO</xMun><UF>RS</UF><CEP>93140050</CEP><cPais>1058</cPais><xPais>Brasil</xPais><fone>0035903868</fone></enderDest><IE>1240244859</IE><email>smreinheimer@ibest.com.br</email></dest><det nItem="1"><prod><cProd>1012022-0</cProd><cEAN/><xProd>DIANTEIRO BOVINO C/O RESF. ( 3.00UN)</xProd><NCM>02012010</NCM><CFOP>5401</CFOP><uCom>KG</uCom><qCom>132.0000</qCom><vUnCom>5.3900000000</vUnCom><vProd>711.48</vProd><cEANTrib/><uTrib>KG</uTrib><qTrib>132.0000</qTrib><vUnTrib>5.3900000000</vUnTrib><indTot>1</indTot></prod><imposto><ICMS><ICMS70><orig>0</orig><CST>70</CST><modBC>3</modBC><pRedBC>58.33</pRedBC><vBC>415.03</vBC><pICMS>12.00</pICMS><vICMS>49.80</vICMS><modBCST>5</modBCST><pRedBCST>58.33</pRedBCST><vBCST>498.19</vBCST><pICMSST>12.00</pICMSST><vICMSST>9.98</vICMSST></ICMS70></ICMS><IPI><cEnq>999</cEnq><IPINT><CST>51</CST></IPINT></IPI><PIS><PISNT><CST>09</CST></PISNT></PIS><COFINS><COFINSNT><CST>09</CST></COFINSNT></COFINS></imposto></det><total><ICMSTot><vBC>415.03</vBC><vICMS>49.80</vICMS><vBCST>498.19</vBCST><vST>9.98</vST><vProd>711.48</vProd><vFrete>0.00</vFrete><vSeg>0.00</vSeg><vDesc>0.00</vDesc><vII>0.00</vII><vIPI>0.00</vIPI><vPIS>0.00</vPIS><vCOFINS>0.00</vCOFINS><vOutro>0.00</vOutro><vNF>721.46</vNF></ICMSTot></total><transp><modFrete>0</modFrete><transporta><CNPJ>91360420000134</CNPJ><xNome>COOP.SUINOC. CAI SUPERIOR LTDA</xNome><IE>2780000079</IE><xEnder>RUA 25 DE JULHO 112</xEnder><xMun>HARMONIA</xMun><UF>RS</UF></transporta><vol><qVol>000000132</qVol><marca>OURO DO SUL</marca><pesoL>132.000</pesoL><pesoB>132.000</pesoB></vol></transp><cobr><fat><nFat>0394797</nFat><vOrig>721.46</vOrig><vLiq>721.46</vLiq></fat><dup><nDup>0394797-001</nDup><dVenc>2012-08-20</dVenc><vDup>721.46</vDup></dup></cobr><infAdic><infCpl>CONTR.AUT.EFET.PGTO.PRAZO PREV.RICMS,APEND.III,SEC.I,III,SEC.II,I, OFICIO 0320080016. |VENDA EFETUADA COM SUPENSAO DA CONTRIBUICAO PARA PIS/PASEP E COFINS LEI 12058/2009. | deb.cco nro: 103 Cobranca no bco 1</infCpl></infAdic></infNFe><Signature xmlns="http://www.w3.org/2000/09/xmldsig#"><SignedInfo><CanonicalizationMethod Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315"/><SignatureMethod Algorithm="http://www.w3.org/2000/09/xmldsig#rsa-sha1"/><Reference URI="#NFe43120791360420000134550000003947971121217141"><Transforms><Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature"/><Transform Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315"/></Transforms><DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/><DigestValue>7Rmndy4W+i5jiIWF6aIvkcSjEio=</DigestValue></Reference></SignedInfo><SignatureValue>
+    k+na/C5mzoKikmre8LpyCXgUITjo1rFdx96sxQVKl9DVyp91hrk/0/EYE+99kamcuzuEm2Jq
+    w5GYLs8jI3H6Wv3dBrJlkCIEzXIaqyf5DCR1JUnl5H1fqb+PN1V6jjYPJaEZc8CiwyW9ei7D
+    klSKV7KzZiJz++vAQXRTez58U0QC+MjhLm2KxxatniZuUtZ84hVUcogYc3OgFi3PgFygGt5H
+    jUvmDYkf+BY7ju31Doed9stwXRArv1+DKUawzPn6K3Ue1S1gu7+oC9oxfmVI2NBsyYgHzqNm
+    9msoRCiROXgaPxgxMnnXf5JcVUP8hESbMlfWUX/nu2ovjMWdHOoGKw==
+  </SignatureValue><KeyInfo><X509Data><X509Certificate>MIIH5TCCBc2gAwIBAgIIVbunHaX8kLYwDQYJKoZIhvcNAQELBQAwTDELMAkGA1UE
+BhMCQlIxEzARBgNVBAoTCklDUC1CcmFzaWwxKDAmBgNVBAMTH1NFUkFTQSBDZXJ0
+aWZpY2Fkb3JhIERpZ2l0YWwgdjIwHhcNMTIwNTIzMTYxMjAwWhcNMTMwNTIzMTYx
+MjAwWjCB/TELMAkGA1UEBhMCQlIxEzARBgNVBAoTCklDUC1CcmFzaWwxFDASBgNV
+BAsTCyhFTSBCUkFOQ08pMRgwFgYDVQQLEw8wMDAwMDEwMDMxMTg5NDgxFDASBgNV
+BAsTCyhFTSBCUkFOQ08pMRQwEgYDVQQLEwsoRU0gQlJBTkNPKTEUMBIGA1UECxML
+KEVNIEJSQU5DTykxFDASBgNVBAsTCyhFTSBCUkFOQ08pMRQwEgYDVQQLEwsoRU0g
+QlJBTkNPKTE7MDkGA1UEAxMyQ09PUEVSQVRJVkEgRE9TIFNVSU5PQ1VMVE9SRVMg
+RE8gQ0FJIFNVUEVSSU9SIExUREEwggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAwggEK
+AoIBAQCo4p4pIozpo7ii1p5F99qGwvrWvM25k5YzsVbMEXmBYjBhtnpb4V3L5DHG
+ZmGqRWABM+iIa1318VeISyzpyCndqfpvhKDeGrox48OWldVbQL7xXSv94JoDm1zZ
+9PJ0+2Jecld47bXINrclblm1P43mmz2apYTQlJKn0i01btdugMj+LT6BIHwRP7A0
+amsLy35pBh1MHxiyvAY4vQReWPQl5Z9o9lD2I7av+v13y2maYVYk1P/6mh9kfHFu
+x0c/Iu0EIaZevfKqm0hEDcvT1V4RcrtgezGkjOSm1WkZm+QSjnp+oKwqdiOIhG0h
+kJatoFebsnUpA7P1tv0BQtJDIps7AgMBAAGjggMXMIIDEzCBlwYIKwYBBQUHAQEE
+gYowgYcwRwYIKwYBBQUHMAKGO2h0dHA6Ly93d3cuY2VydGlmaWNhZG9kaWdpdGFs
+LmNvbS5ici9jYWRlaWFzL3NlcmFzYWNkdjIucDdiMDwGCCsGAQUFBzABhjBodHRw
+Oi8vb2NzcC5jZXJ0aWZpY2Fkb2RpZ2l0YWwuY29tLmJyL3NlcmFzYWNkdjIwHwYD
+VR0jBBgwFoAUmuCDENcmm+m62oKygc45GtOHcIYwcQYDVR0gBGowaDBmBgZgTAEC
+AQYwXDBaBggrBgEFBQcCARZOaHR0cDovL3B1YmxpY2FjYW8uY2VydGlmaWNhZG9k
+aWdpdGFsLmNvbS5ici9yZXBvc2l0b3Jpby9kcGMvZGVjbGFyYWNhby1zY2QucGRm
+MIHwBgNVHR8EgegwgeUwSaBHoEWGQ2h0dHA6Ly93d3cuY2VydGlmaWNhZG9kaWdp
+dGFsLmNvbS5ici9yZXBvc2l0b3Jpby9sY3Ivc2VyYXNhY2R2Mi5jcmwwQ6BBoD+G
+PWh0dHA6Ly9sY3IuY2VydGlmaWNhZG9zLmNvbS5ici9yZXBvc2l0b3Jpby9sY3Iv
+c2VyYXNhY2R2Mi5jcmwwU6BRoE+GTWh0dHA6Ly9yZXBvc2l0b3Jpby5pY3BicmFz
+aWwuZ292LmJyL2xjci9TZXJhc2EvcmVwb3NpdG9yaW8vbGNyL3NlcmFzYWNkdjIu
+Y3JsMA4GA1UdDwEB/wQEAwIF4DAdBgNVHSUEFjAUBggrBgEFBQcDAgYIKwYBBQUH
+AwQwgcAGA1UdEQSBuDCBtYEaT1VST0RPU1VMQE9VUk9ET1NVTC5DT00uQlKgPgYF
+YEwBAwSgNRMzMzAwOTE5MzMwNzY3NDEzOTAzNDAwMDAwMDAwMDAwMDAwMDAwMDAw
+MDAwMDAwMDAwMDAwoCMGBWBMAQMCoBoTGFRIRU9CQUxETyBWQUxFUklPIFBFUlND
+SKAZBgVgTAEDA6AQEw45MTM2MDQyMDAwMDEzNKAXBgVgTAEDB6AOEwwwMDAwMDAw
+MDAwMDAwDQYJKoZIhvcNAQELBQADggIBAJO9E+ylQMHhqrkVKLA2RLD125uRFPPG
+Zi5oYSx5ady/O+Ktsn2axXH5BSbfnYa2eeYUuRThNlBRLHrOYCgVMfNNWPN7GKTd
+NGSIHqaPZ5lSxnA8IxwlsmGEuXMskFF/Lr3ghzrmj/VMijdZwuv1vKcCjRpQs6df
+kU2w6aCC08tzOcAKEhsTosNVVnd28zowORuIPPtA9v4nMFPv0guYeBJaf5MIz+CE
++PES55faTLMCLZDD2hf/o4nKGlg3HzkImjN3YWOdlVEwzgcvHZSIbE/36OUVIKUE
+8MoKxVyGxWGk+Cdj/nsyDekv/Wc9EymnA11W7Hk1UOHMt03JELcysbA3DJWYKXJP
+7DpItFlFHdhfRypJtmvmK9U6OH6Dqs2WkRtDnq8oOe7LG2KbI390oqli9jHpCCa4
+GCgzN6Rrrz1tf5UxNLS1EGrMzJCN7ue4sia+kjS1+ey7agYZxjK/BgMwzyLUJO4+
+AfqiXZX24hAU2H275rzAYsHaD52omq6PhGAaEVNXuC9WRDyVImKZAbpL8QnmfXV4
+Z5XGAWaVwp+aOkCBzX4cT+J9j2060y0W0N0+1LRknA4oTgLtU4WujevBPYMqOq1F
+jwBPbBf97QOdRjeA69iwsl8DoR5Vh2+PSgYG+bCfLPx0VkK6Ne9ryZ9K/1v7Xjei
+mw4TBO0B9s1W
+</X509Certificate></X509Data></KeyInfo></Signature></NFe><protNFe versao="2.00" xmlns="http://www.portalfiscal.inf.br/nfe"><infProt Id="NFe143120101956568"><tpAmb>1</tpAmb><verAplic>RS20120727075109</verAplic><chNFe>43120791360420000134550000003947971121217141</chNFe><dhRecbto>2012-07-30T10:52:37</dhRecbto><nProt>143120101956568</nProt><digVal>7Rmndy4W+i5jiIWF6aIvkcSjEio=</digVal><cStat>100</cStat><xMotivo>Autorizado o uso da NF-e</xMotivo></infProt></protNFe></nfeProc>

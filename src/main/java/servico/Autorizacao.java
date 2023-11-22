@@ -59,11 +59,12 @@ public class Autorizacao {
 					e.printStackTrace();
 				}
 				ConexaoServidor con = new ConexaoServidor();
-				String UPDATE_TOKEN = "update dominio_api.token set token = ?";
+				String UPDATE_TOKEN = "update dominio_api.token set token = ? where id_loja = ?";
 				try {
 					con.abrirConexao(Config.host, Config.porta, Config.base, Config.usuario, Config.senha);
 					PreparedStatement stmt_up = con.prepareStatement(UPDATE_TOKEN);
 					stmt_up.setString(1,token);
+					stmt_up.setInt(2, Config.loja);
 					int rowsInserted = stmt_up.executeUpdate();
 					if (rowsInserted > 0) {
 						System.out.println("Update token executado!");
@@ -159,11 +160,12 @@ public class Autorizacao {
 					response.body().close();
 					client.connectionPool().evictAll(); 
 					
-				} catch (IOException e) {
+				} catch (IOException e ) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 					System.out.println("Erro na conexão com o servidor! \n"+e);
 					retorno = "Erro na conexão com o servidor! \nVerifique sua internet ou entre em contato com a Dominio!\n"+e.getMessage();
+					return 0;
 				}
 				return trataMensagemRetorno(retorno);
 	}

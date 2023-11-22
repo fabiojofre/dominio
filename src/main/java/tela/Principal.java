@@ -83,7 +83,7 @@ public class Principal extends JFrame {
 	public Principal() {
 
 		setIconImage(Toolkit.getDefaultToolkit().getImage(Principal.class.getResource("/vrrecifeframework/img/cofre.png")));
-		minutos = 15;
+		minutos = 2;
 		setResizable(false);
 		setAutoRequestFocus(false);
 		setTitle("Dominio APP - ");
@@ -205,7 +205,7 @@ public class Principal extends JFrame {
 	// metodo que controla o timer
 	public void controle(int minutos) {
 		timer = new Timer();
-		timer.schedule(new controleTask(), 0, minutos * 1000);
+		timer.schedule(new controleTask(), 0, minutos * (1000 * 60));
 	}
 
 	// Classe de controle de ações do timer
@@ -235,7 +235,8 @@ public class Principal extends JFrame {
 						int ret = aut.enviaXml(Config.token,Config.x_integration_key,arquivos.get(i));
 						
 						if(ret == 1) {
-							System.out.println(aut.getIdEnvio());//futuramente será usado para validação de dados do xml enviado
+							System.out.println(aut.getIdEnvio());
+
 							String codigo = aut.confirmaProcessamento(Config.token,Config.x_integration_key, aut.getIdEnvio());
 							if(codigo.equals("SA2")) {
 								System.out.println("Codigo :"+codigo+" Processado!");
@@ -249,8 +250,14 @@ public class Principal extends JFrame {
 									System.out.println("deletado!!!");
 								}
 //												
-						} if(ret == 2) {
+						}else if(ret == 2) {
 							Config.token = aut.retornaToken(Config.x_integration_key, Config.client_id, Config.client_secret, Config.audience);
+						}else if(ret == 0){
+							System.out.println("Erro na execução da aplicação!");
+							
+						}else{
+//							System.out.println("Erro na execução da aplicação!");
+							arquivo.escreverLog("Arquivo: "+arquivos.get(i)+" - "+Config.msgLog);
 						}
 					}
 			
@@ -258,8 +265,9 @@ public class Principal extends JFrame {
 				lbStatus_1.setText("");
 			} else
 
-			timer.cancel(); // Terminate the timer thread
+//			timer.cancel(); // Terminate the timer thread
 			lbStatus_1.setText("");
+			
 		}
 		
 	}

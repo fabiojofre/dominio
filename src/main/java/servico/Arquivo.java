@@ -45,7 +45,7 @@ public class Arquivo {
 		
 	}
 	 public void escreverLog(String linha) {
-			File file = new File("../log.txt");
+			File file = new File("log.txt");
 			try {
 			if (!file.exists()) {
 				 file.createNewFile();
