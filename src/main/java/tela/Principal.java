@@ -235,18 +235,20 @@ public class Principal extends JFrame {
 						System.out.println("Arquivo: "+arquivos.get(i));
 						// envia xml e recebe o retorno
 						int ret = aut.enviaXml(Config.token,Config.x_integration_key,arquivos.get(i));
-						
-						// aguarda 3 segundos deois que envia o xml
-						try {
-							TimeUnit.SECONDS.sleep(3);
-						} catch (InterruptedException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-						}
 					
 						if(ret == 1) {
 							System.out.println(aut.getIdEnvio());
+							
+							// aguarda 3 segundos deois que envia o xml
 
+							System.out.println("Enviando Confirmação!");
+							try {
+								TimeUnit.SECONDS.sleep(3);
+							} catch (InterruptedException e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							}
+							
 							String codigo = aut.confirmaProcessamento(Config.token,Config.x_integration_key, aut.getIdEnvio());
 							if(codigo.equals("SA2")) {
 								System.out.println("Codigo :"+codigo+" Processado!");
