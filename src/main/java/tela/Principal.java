@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.concurrent.TimeUnit;
 
 import javax.swing.JButton;
 import javax.swing.JDesktopPane;
@@ -71,6 +72,7 @@ public class Principal extends JFrame {
 
 	// variaveis para o timer
 	Timer timer;
+	Timer timer2;
 	boolean atividade = false;
 	// variavel properties
 //	ServicoConfig serv = new ServicoConfig();
@@ -205,7 +207,9 @@ public class Principal extends JFrame {
 	// metodo que controla o timer
 	public void controle(int minutos) {
 		timer = new Timer();
+		timer2 = new Timer();
 		timer.schedule(new controleTask(), 0, minutos * (1000 * 60));
+		timer2.schedule(new controleTask(), 0,  (1000 * 60));
 	}
 
 	// Classe de controle de ações do timer
@@ -222,9 +226,7 @@ public class Principal extends JFrame {
 					Autorizacao aut = new Autorizacao();
 					// cria aqruivo de log
 				
-					
-					
-					
+														
 					List<String> arquivos = new ArrayList<>();
 					arquivos = arquivo.listarArquivosXML(Config.diretorio);
 					
@@ -234,6 +236,14 @@ public class Principal extends JFrame {
 						// envia xml e recebe o retorno
 						int ret = aut.enviaXml(Config.token,Config.x_integration_key,arquivos.get(i));
 						
+						// aguarda 3 segundos deois que envia o xml
+						try {
+							TimeUnit.SECONDS.sleep(3);
+						} catch (InterruptedException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+					
 						if(ret == 1) {
 							System.out.println(aut.getIdEnvio());
 

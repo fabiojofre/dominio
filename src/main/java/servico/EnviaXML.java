@@ -126,7 +126,7 @@ public class EnviaXML {
 			while (rs.next()) {
 
 				String xml = rs.getString("xml");
-				String nomeArquivo = Config.diretorio + "NFe" + rs.getString("chavenfe") + ".xml";
+				String nomeArquivo = Config.diretorio + "NFee" + rs.getString("chavenfe") + ".xml";
 
 				Arquivo ar = new Arquivo();
 				ar.geraArquivo(nomeArquivo, xml);
