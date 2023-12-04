@@ -19,16 +19,16 @@ public class ServicoConfig {
 		Config.senha = VrProperties.getString("database.senha");
 		Config.loja = VrProperties.getInt("config.loja");
 
-		Config.x_integration_key = VrProperties.getString("config.chave");
 		Config.client_id = VrProperties.getString("config.client_id");
 		Config.client_secret = VrProperties.getString("config.client_secret");
 		Config.audience = VrProperties.getString("config.audience");
+		Config.chave_temporaria = VrProperties.getString("config.integration_key");
 		
 		
 
 		String dadosProp ="";
 		int cont = 0;
-		if(Config.x_integration_key  == null) {
+		if(Config.chave_temporaria  == null) {
 			dadosProp = dadosProp+"\n config.chave";
 			cont=cont+1;
 		}
@@ -60,12 +60,13 @@ public class ServicoConfig {
 		try {
 			cs.abrirConexao(Config.host, Config.porta, Config.base, Config.usuario, Config.senha);
 			System.out.println("Conexao inicial bem sucedida!");
-			String sql = "select token from dominio_api.token where id_loja = ? limit 1";
+			String sql = "select token, chave from dominio_api.token where id_loja = ? limit 1";
 			PreparedStatement stmt = cs.prepareStatement(sql);
 			stmt.setInt(1, Config.loja);
 			ResultSet rs = stmt.executeQuery();
 			while (rs.next()) {
 				Config.token = rs.getString(1);
+				Config.x_integration_key = rs.getString(2);
 			}
 			
 
@@ -95,6 +96,7 @@ public class ServicoConfig {
 
 		System.out.println("\n**** Dominio: **** ");
 		System.out.println("Chave: " + Config.x_integration_key);
+		System.out.println("Chave Temporaria: " + Config.chave_temporaria);
 		System.out.println("ID Cliente: " + Config.client_id);
 		System.out.println("Secret Cliente: " + Config.client_secret);
 		System.out.println("Audience: " + Config.audience);

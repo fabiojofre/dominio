@@ -11,8 +11,9 @@ import java.awt.TrayIcon;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
-import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -22,6 +23,7 @@ import javax.swing.JButton;
 import javax.swing.JDesktopPane;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 import javax.swing.WindowConstants;
@@ -32,13 +34,12 @@ import servico.Autorizacao;
 import servico.Config;
 import servico.EnviaXML;
 import servico.ServicoConfig;
-import util.Autenticacao;
 
 
 public class Principal extends JFrame {
 	private static final long serialVersionUID = 1L;
 	
-	EnviaXML envia = new EnviaXML();
+	
 
 	private JPanel contentPane;
 
@@ -58,6 +59,31 @@ public class Principal extends JFrame {
 					ServicoConfig serv = new ServicoConfig();
 					serv.trataConfig();
 					
+					if(Config.x_integration_key == null || Config.x_integration_key.equals("")) {
+						int val = JOptionPane.showConfirmDialog(null, "Deseja gerar novo token?");
+						if(val == 0) { 
+							Autorizacao aut = new Autorizacao();
+							System.out.println("Gerando novo token...");
+							if(Config.token.length() > 20) {
+							Config.token = aut.retornaToken(Config.x_integration_key, Config.client_id, Config.client_secret, Config.audience);
+							}else {
+								Config.token = aut.retornaToken(Config.chave_temporaria, Config.client_id, Config.client_secret, Config.audience);
+							}
+							JOptionPane.showMessageDialog(null, "Token gerado com sucesso!");
+							System.out.println("Token gerado: "+Config.token);
+						}
+						int val2 = JOptionPane.showConfirmDialog(null, "Deseja gerar nova chave?");
+						if (val2 == 0) {
+							Autorizacao aut = new Autorizacao();
+							System.out.println("Gerando nova chave...");
+							if(Config.token.length() < 20) {
+							Config.x_integration_key = aut.retornaChaveIntegracao(Config.token, Config.chave_temporaria);
+							}else {
+								Config.x_integration_key = aut.retornaChaveIntegracao(Config.token, Config.chave_temporaria);
+							}
+							System.out.println("Chave gerada: "+Config.x_integration_key);
+						}
+					}
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -211,76 +237,103 @@ public class Principal extends JFrame {
 		timer.schedule(new controleTask(), 0, minutos * (1000 * 60));
 		timer2.schedule(new controleTask(), 0,  (1000 * 60));
 	}
-
+	
+	
 	// Classe de controle de ações do timer
 	class controleTask extends TimerTask {
 		public void run() {
-			if (atividade == true) {
-				lbStatus_1.setText("Executando!!!!!");
-				
-				 	envia.geraNotaSaida();
-					envia.geraNotaEntrada();
-					envia.geraCupom();
-					
-					Arquivo arquivo = new Arquivo();
-					Autorizacao aut = new Autorizacao();
-					// cria aqruivo de log
-				
-														
-					List<String> arquivos = new ArrayList<>();
-					arquivos = arquivo.listarArquivosXML(Config.diretorio);
-					
-					System.out.println("Listando arquivos...");
-					for(int i=0;i < arquivos.size();i++) {
-						System.out.println("Arquivo: "+arquivos.get(i));
-						// envia xml e recebe o retorno
-						int ret = aut.enviaXml(Config.token,Config.x_integration_key,arquivos.get(i));
-					
-						if(ret == 1) {
-							System.out.println(aut.getIdEnvio());
-							
-							// aguarda 3 segundos deois que envia o xml
-
-							System.out.println("Enviando Confirmação!");
-							try {
-								TimeUnit.SECONDS.sleep(3);
-							} catch (InterruptedException e) {
-								// TODO Auto-generated catch block
-								e.printStackTrace();
-							}
-							
-							String codigo = aut.confirmaProcessamento(Config.token,Config.x_integration_key, aut.getIdEnvio());
-							if(codigo.equals("SA2")) {
-								System.out.println("Codigo :"+codigo+" Processado!");
-							}else {
-								arquivo.escreverLog("Arquivo: "+arquivos.get(i)+" - "+Config.msgLog);
-								System.out.println(Config.msgLog);
-								Config.msgLog = "";
-							}
-								File f = new File(arquivos.get(i));
-								if(f.delete()) {
-									System.out.println("deletado!!!");
-								}
-//												
-						}else if(ret == 2) {
-							Config.token = aut.retornaToken(Config.x_integration_key, Config.client_id, Config.client_secret, Config.audience);
-						}else if(ret == 0){
-							System.out.println("Erro na execução da aplicação!");
-							
-						}else{
-//							System.out.println("Erro na execução da aplicação!");
-							arquivo.escreverLog("Arquivo: "+arquivos.get(i)+" - "+Config.msgLog);
-						}
-					}
+			Arquivo arquivo = new Arquivo();
+			Autorizacao aut = new Autorizacao();
 			
-				System.out.println("Ciclo finalizado!");
-				lbStatus_1.setText("");
-			} else
+			
+			while(atividade) {		
+				lbStatus_1.setText("Executando!!!!!");
+				List<String> arquivos = new ArrayList<>();
+				EnviaXML envia = new EnviaXML();
+				
+			 	envia.geraNotaSaida();
+				envia.geraNotaEntrada();
+				envia.geraCupom();
+				
+				
+				arquivos = arquivo.listarArquivosXML(Config.diretorio);
+				int tamanho = arquivos.size();
+				System.out.println("Gerados "+tamanho+" arquivos...");
+				
+				for(int i=0;i < tamanho;i=i+1) {
+			
+					File f = new File(arquivos.get(i));
+					
+					System.out.println("Arquivo a ser enviado: "+arquivos.get(i));
+					
+					// envia xml e recebe o retorno
+					
+					int ret = 0; 
+					try {
+						ret =	aut.enviaXml(Config.token,Config.x_integration_key,arquivos.get(i));
+					}catch (Exception e) {
+						System.out.println(e);
+						arquivo.escreverLog(e.toString());
+					}
+					
+					if(ret == 1) {
+						System.out.println(aut.getIdEnvio());
+						
+						
+						Date dataHoraAtual = new Date();
+						String data = new SimpleDateFormat("dd/MM/yyyy").format(dataHoraAtual);
+						String hora = new SimpleDateFormat("HH:mm:ss").format(dataHoraAtual);
+						
+					
+						// aguarda 3 segundos depois que envia o xml
 
-//			timer.cancel(); // Terminate the timer thread
-			lbStatus_1.setText("");
+						try {
+							TimeUnit.SECONDS.sleep(3);
+						} catch (InterruptedException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+							System.out.println("Erro no timer interno do loop.");
+							arquivo.escreverLog(e.toString());
+						}
+						
+						System.out.println("Enviando Confirmação: "+data+" "+hora);
+						
+						
+						String codigo =""; 
+						try {
+							codigo = aut.confirmaProcessamento(Config.token,Config.x_integration_key, aut.getIdEnvio());
+						}catch (Exception e) {
+							System.out.println(e);
+							arquivo.escreverLog(e.toString());
+						}
+						
+						if(codigo.equals("SA2")) {
+							System.out.println("Codigo :"+codigo+" Processado!");
+						}else {
+							arquivo.escreverLog("Arquivo: "+arquivos.get(i)+" - "+Config.msgLog);
+							System.out.println(Config.msgLog);
+							Config.msgLog = "";
+						}
+						System.out.println("Tentando deletar o arquivo ...");
+						if(f.delete()) {
+							System.out.println("deletado!!!");
+						}
+					
+				}else if(ret == 2) {
+					Config.token = aut.retornaToken(Config.x_integration_key, Config.client_id, Config.client_secret, Config.audience);
+				}else{
+					System.out.println("Erro na execução da aplicação!");
+					
+					arquivo.escreverLog("Arquivo: "+arquivos.get(i)+" - "+Config.msgLog);
+				}
+				
+			}
+			
 			
 		}
-		
+			lbStatus_1.setText("");
+			System.out.println("Processo finalizado!!");
 	}
+	
+}
 }

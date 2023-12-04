@@ -17,6 +17,7 @@ public class Config {
 	public static Integer loja = 0;
 	public static String nomeLoja ="";
 	public static Long cnpj;
+	public static String chave_temporaria;
 	
 	
 	public static String msgLog = "";

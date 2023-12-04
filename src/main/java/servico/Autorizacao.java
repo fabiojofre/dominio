@@ -3,10 +3,10 @@ package servico;
 import java.io.File;
 import java.io.IOException;
 import java.sql.PreparedStatement;
+import java.util.concurrent.TimeUnit;
 
 import javax.swing.JOptionPane;
 
-import org.apache.poi.util.SystemOutLogger;
 import org.json.JSONObject;
 
 import com.mashape.unirest.http.HttpResponse;
@@ -110,6 +110,24 @@ public class Autorizacao {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
+				ConexaoServidor con = new ConexaoServidor();
+				String UPDATE_CHAVE = "update dominio_api.token set chave = ? where id_loja = ?";
+				try {
+					con.abrirConexao(Config.host, Config.porta, Config.base, Config.usuario, Config.senha);
+					PreparedStatement stmt_up = con.prepareStatement(UPDATE_CHAVE);
+					stmt_up.setString(1,chave);
+					stmt_up.setInt(2, Config.loja);
+					int rowsInserted = stmt_up.executeUpdate();
+					if (rowsInserted > 0) {
+						System.out.println("Update chave executado!");
+					} else {
+						System.out.println("Update chave falhou!");
+					}
+					con.close();
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 		
 		return chave;
 	}
@@ -132,11 +150,13 @@ public class Autorizacao {
 		
 	}
 	
-	
 	public int enviaXml(String token, String x_integration_key, String arquivo) {
 		String retorno = "";
-		OkHttpClient client = new OkHttpClient().newBuilder()
-				  .build();
+		OkHttpClient.Builder builder = new OkHttpClient.Builder();
+		builder.connectTimeout(60, TimeUnit.SECONDS);
+		builder.readTimeout(60, TimeUnit.SECONDS);
+		builder.writeTimeout(60, TimeUnit.SECONDS);
+		OkHttpClient client = builder.build();
 				MediaType mediaType = MediaType.parse("text/plain");
 				RequestBody body = new MultipartBody.Builder().setType(MultipartBody.FORM)
 				  .addFormDataPart("file[]",arquivo,
@@ -169,6 +189,8 @@ public class Autorizacao {
 				}
 				return trataMensagemRetorno(retorno);
 	}
+	
+	
 	
 	public String confirmaProcessamento(String token, String x_integration_key, String processamento ) {
 		String retorno = ""; 
