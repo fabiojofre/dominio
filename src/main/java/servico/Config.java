@@ -18,6 +18,7 @@ public class Config {
 	public static String nomeLoja ="";
 	public static Long cnpj;
 	public static String chave_temporaria;
+	public static String inicio;
 	
 	
 	public static String msgLog = "";

@@ -60,13 +60,14 @@ public class ServicoConfig {
 		try {
 			cs.abrirConexao(Config.host, Config.porta, Config.base, Config.usuario, Config.senha);
 			System.out.println("Conexao inicial bem sucedida!");
-			String sql = "select token, chave from dominio_api.token where id_loja = ? limit 1";
+			String sql = "select token, chave, inicio from dominio_api.token where id_loja = ? limit 1";
 			PreparedStatement stmt = cs.prepareStatement(sql);
 			stmt.setInt(1, Config.loja);
 			ResultSet rs = stmt.executeQuery();
 			while (rs.next()) {
 				Config.token = rs.getString(1);
 				Config.x_integration_key = rs.getString(2);
+				Config.inicio = rs.getDate(3).toString();
 			}
 			
 
@@ -105,5 +106,6 @@ public class ServicoConfig {
 		System.out.println("Id da Loja: "+Config.loja);
 		System.out.println("Nome Loja: "+Config.nomeLoja);
 		System.out.println("CNPJ: "+Config.cnpj);
+		System.out.println("Data de inicio: "+Config.inicio);
 	}
 }

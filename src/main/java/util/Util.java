@@ -1,7 +1,15 @@
 package util;
 
 
+import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
+
+import dominio.ApiStatus;
+import dominio.BoxeStatus;
+import dominio.FilesExpanded;
+import dominio.Retorno;
+import dominio.Status;
 
 public class Util {
 
@@ -29,4 +37,40 @@ public class Util {
 		return dados;
 	}
 
+	
+	
+	public Retorno retornaRetorno(String json) {
+		Retorno ret = new Retorno();
+		
+		try {
+		     JSONObject jsonRetorno = new JSONObject(json);
+		      JSONArray jsonFilesExpanded = jsonRetorno.getJSONArray("filesExpanded");
+		      JSONObject jsonStatus = jsonRetorno.getJSONObject("status");
+
+		      ret.setType(jsonRetorno.getString("type"));
+		      ret.setLastStatusOn(jsonRetorno.getString("lastStatusOn"));
+		      ret.setApiVersion(jsonRetorno.getString("apiVersion"));
+		      ret.setBoxeFile(jsonRetorno.getBoolean("boxeFile"));
+		      ret.setId(jsonRetorno.getString("id"));
+		      ret.setStatus(new Status(jsonStatus.getString("code"), jsonStatus.getString("message")));
+		      	      
+		      for(int i =0;i<jsonFilesExpanded.length();i++) {
+		    	  // selarei os JSONs
+		    	  JSONObject object = jsonFilesExpanded.getJSONObject(i);
+		    	  JSONObject apiStatus = object.getJSONObject("apiStatus");
+		    	  JSONObject boxeStatus = object.getJSONObject("boxeStatus");
+		    	  // distrinchei os subobjetos
+		    	  ApiStatus a = new ApiStatus(apiStatus.getString("code"),apiStatus.getString("message"));
+		    	  BoxeStatus b = new BoxeStatus(boxeStatus.getString("code"),boxeStatus.getString("message"));
+		    	  // conclui o objeto superior
+		    	  ret.setFilesExpanded(new FilesExpanded(object.getString("lastApiStatusOn"), object.getString("lastBoxeStatusOn"), a, b));
+		      }	 
+		      
+		    } catch (JSONException err) {
+		      System.out.println("Exception : " + err.toString());
+		    }
+		
+		return ret;
+	}
+	
 }
