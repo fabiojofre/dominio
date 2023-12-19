@@ -242,97 +242,27 @@ public class Principal extends JFrame {
 	// Classe de controle de ações do timer
 	class controleTask extends TimerTask {
 		public void run() {
-			Arquivo arquivo = new Arquivo();
-			Autorizacao aut = new Autorizacao();
+			if (atividade == true) {
+			lbStatus_1.setText("Processando!!!");
+			EnviaXML envia = new EnviaXML();
+			System.out.println("\n");
+			System.out.println("Enviando bloco de NFe-Saida...\n");
 			
+			envia.geraNotaSaida();
 			
-			while(atividade) {		
-				lbStatus_1.setText("Executando!!!!!");
-				List<String> arquivos = new ArrayList<>();
-				EnviaXML envia = new EnviaXML();
-				
-			 	envia.geraNotaSaida();
-				envia.geraNotaEntrada();
-				envia.geraCupom();
-				
-				
-				arquivos = arquivo.listarArquivosXML(Config.diretorio);
-				int tamanho = arquivos.size();
-				System.out.println("Gerados "+tamanho+" arquivos...");
-				
-				for(int i=0;i < tamanho;i=i+1) {
+			System.out.println("\n");
+			System.out.println("Enviando bloco de NFe-Entrada...\n");
 			
-					File f = new File(arquivos.get(i));
-					
-					System.out.println("Arquivo a ser enviado: "+arquivos.get(i));
-					
-					// envia xml e recebe o retorno
-					
-					int ret = 0; 
-					try {
-						ret =	aut.enviaXml(Config.token,Config.x_integration_key,arquivos.get(i));
-					}catch (Exception e) {
-						System.out.println(e);
-						arquivo.escreverLog(e.toString());
-					}
-					
-					if(ret == 1) {
-						System.out.println(aut.getIdEnvio());
-						
-						
-						Date dataHoraAtual = new Date();
-						String data = new SimpleDateFormat("dd/MM/yyyy").format(dataHoraAtual);
-						String hora = new SimpleDateFormat("HH:mm:ss").format(dataHoraAtual);
-						
-					
-						// aguarda 3 segundos depois que envia o xml
-
-						try {
-							TimeUnit.SECONDS.sleep(3);
-						} catch (InterruptedException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-							System.out.println("Erro no timer interno do loop.");
-							arquivo.escreverLog(e.toString());
-						}
-						
-						System.out.println("Enviando Confirmação: "+data+" "+hora);
-						
-						
-						String codigo =""; 
-						try {
-							codigo = aut.confirmaProcessamento(Config.token,Config.x_integration_key, aut.getIdEnvio());
-						}catch (Exception e) {
-							System.out.println(e);
-							arquivo.escreverLog(e.toString());
-						}
-						
-						if(codigo.equals("SA2")) {
-							System.out.println("Codigo :"+codigo+" Processado!");
-						}else {
-							arquivo.escreverLog("Arquivo: "+arquivos.get(i)+" - "+Config.msgLog);
-							System.out.println(Config.msgLog);
-							Config.msgLog = "";
-						}
-						System.out.println("Tentando deletar o arquivo ...");
-						if(f.delete()) {
-							System.out.println("deletado!!!");
-						}
-					
-				}else if(ret == 2) {
-					Config.token = aut.retornaToken(Config.x_integration_key, Config.client_id, Config.client_secret, Config.audience);
-				}else{
-					System.out.println("Erro na execução da aplicação!");
-					
-					arquivo.escreverLog("Arquivo: "+arquivos.get(i)+" - "+Config.msgLog);
-				}
-				
-			}
+			envia.geraNotaEntrada();
 			
+			System.out.println("\n");
+			System.out.println("Enviando bloco de NFc-e (Cupons fiscais) ...\n");
 			
-		}
+			envia.geraCupom();
+			
 			lbStatus_1.setText("");
 			System.out.println("Processo finalizado!!");
+			}
 	}
 	
 }

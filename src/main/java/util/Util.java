@@ -41,7 +41,9 @@ public class Util {
 	
 	public Retorno retornaRetorno(String json) {
 		Retorno ret = new Retorno();
-		
+		if(json.contains("Failed to decode invalid or incorrectly formatted token") || (json.contains("Token has expired"))) {
+			ret.setStatus(new Status("TO", "Falha no token"));
+		}else {
 		try {
 		     JSONObject jsonRetorno = new JSONObject(json);
 		      JSONArray jsonFilesExpanded = jsonRetorno.getJSONArray("filesExpanded");
@@ -68,9 +70,11 @@ public class Util {
 		      
 		    } catch (JSONException err) {
 		      System.out.println("Exception : " + err.toString());
+		      ret = null;
 		    }
-		
+		}
 		return ret;
+	
 	}
 	
 }

@@ -67,7 +67,7 @@ public class ServicoConfig {
 			while (rs.next()) {
 				Config.token = rs.getString(1);
 				Config.x_integration_key = rs.getString(2);
-				Config.inicio = rs.getDate(3).toString();
+				Config.inicio = rs.getDate(3);
 			}
 			
 
@@ -107,5 +107,6 @@ public class ServicoConfig {
 		System.out.println("Nome Loja: "+Config.nomeLoja);
 		System.out.println("CNPJ: "+Config.cnpj);
 		System.out.println("Data de inicio: "+Config.inicio);
+		System.out.println("**********************************\n");
 	}
 }

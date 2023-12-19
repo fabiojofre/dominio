@@ -14,6 +14,7 @@ import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
 
 import conexao.ConexaoServidor;
+import dominio.Retorno;
 import okhttp3.Call;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
@@ -150,7 +151,9 @@ public class Autorizacao {
 		
 	}
 	
-	public int enviaXml(String token, String x_integration_key, String arquivo) {
+	public Retorno enviaXml(String token, String x_integration_key, String arquivo) {
+		Retorno ret = new Retorno();
+		Util u = new Util();
 		String retorno = "";
 		OkHttpClient.Builder builder = new OkHttpClient.Builder();
 		builder.connectTimeout(60, TimeUnit.SECONDS);
@@ -179,21 +182,28 @@ public class Autorizacao {
 					Call call = client.newCall(request);
 					response.body().close();
 					client.connectionPool().evictAll(); 
+					ret = u.retornaRetorno(retorno);
 					
 				} catch (IOException e ) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 					System.out.println("Erro na conexão com o servidor! \n"+e);
 					retorno = "Erro na conexão com o servidor! \nVerifique sua internet ou entre em contato com a Dominio!\n"+e.getMessage();
-					return 0;
+					return null;
 				}
-				return trataMensagemRetorno(retorno);
+				return ret;
 	}
 	
 	
 	
-	public String confirmaProcessamento(String token, String x_integration_key, String processamento ) {
+	public Retorno confirmaProcessamento(String token, String x_integration_key, String processamento ) {
 		String retorno = ""; 
+		Retorno ret = new Retorno();
+		Util u = new Util();
+		OkHttpClient.Builder builder = new OkHttpClient.Builder();
+		builder.connectTimeout(60, TimeUnit.SECONDS);
+		builder.readTimeout(60, TimeUnit.SECONDS);
+		builder.writeTimeout(60, TimeUnit.SECONDS);
 		OkHttpClient client = new OkHttpClient();
 		Request request = new Request.Builder()
 				.url("https://api.onvio.com.br/dominio/invoice/v3/batches/"+processamento)
@@ -210,11 +220,12 @@ public class Autorizacao {
 				Call call = client.newCall(request);
 				response.body().close();
 				client.connectionPool().evictAll(); 
+				ret = u.retornaRetorno(retorno);;
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			return trataMensagemConfirmacao(retorno);
+			return ret;
 		
 	}
 	private int trataMensagemRetorno(String mensagem) {
@@ -237,17 +248,7 @@ public class Autorizacao {
 		return ret;
 	}
 
-	private String trataMensagemConfirmacao(String mensagem) {
-			int inicioCod = mensagem.indexOf("\"apiStatus\":{\"code\":") + 21;
-			int fimCod = mensagem.indexOf("\",", inicioCod);
-			String msgRet = mensagem.substring(inicioCod, fimCod);
-			setIdEnvio(msgRet); 
-			
-//			System.out.println(mensagem);
-			Config.msgLog = mensagem;
-			return msgRet;
-		
-	}
+	
 
 	public String getIdEnvio() {
 		return idEnvio;

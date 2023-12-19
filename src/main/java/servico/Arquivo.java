@@ -1,8 +1,10 @@
 package servico;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
@@ -32,8 +34,9 @@ public class Arquivo {
 		File file = new File(arquivo);
 		try {
 			file.createNewFile();
-			 FileWriter fileWriter = new FileWriter(arquivo, false);
-	         PrintWriter printWriter = new PrintWriter(fileWriter);
+//			 FileWriter fileWriter = new FileWriter(arquivo, false);
+//	         PrintWriter printWriter = new PrintWriter(fileWriter);
+			 PrintWriter printWriter = new PrintWriter(new OutputStreamWriter(new FileOutputStream(arquivo), "UTF-8"));
 	         printWriter.print(xml);
 	         printWriter.flush();
 	            printWriter.close();
